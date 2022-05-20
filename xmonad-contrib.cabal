@@ -448,6 +448,7 @@ test-suite tests
                , unix
                , utf8-string
                , xmonad >= 0.16.9999 && < 0.18
+               , MissingH
   cpp-options: -DTESTING
   ghc-options: -Wall -Wno-unused-do-bind
   default-language: Haskell2010

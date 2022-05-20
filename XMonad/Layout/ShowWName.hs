@@ -32,6 +32,7 @@ import XMonad.Layout.LayoutModifier
 import XMonad.Util.Font
 import XMonad.Util.Timer
 import XMonad.Util.XUtils
+import Data.List.Utils (replace)
 
 -- $usage
 -- You can use this module with the following in your
@@ -93,6 +94,9 @@ doShow (SWN True  c (Just (_,w))) r wrs = deleteWindow w >> flashName c r wrs
 doShow (SWN True  c  Nothing    ) r wrs = flashName c r wrs
 doShow (SWN False _  _          ) _ wrs = return (wrs, Nothing)
 
+replaceWorkspaceN :: String -> String
+replaceWorkspaceN wsName = replace "0_" "L" $ replace "1_" "R"  wsName
+
 flashName :: SWNConfig -> Rectangle -> [(a, Rectangle)] -> X ([(a, Rectangle)], Maybe (ShowWName a))
 flashName c (Rectangle sx sy wh ht) wrs = do
   d <- asks display
@@ -105,7 +109,7 @@ flashName c (Rectangle sx sy wh ht) wrs = do
       x     = fi sx + (fi wh - width + 2) `div` 2
   w <- createNewWindow (Rectangle (fi x) (fi y) (fi width) (fi hight)) Nothing "" True
   showWindow w
-  paintAndWrite w f (fi width) (fi hight) 0 (swn_bgcolor c) "" (swn_color c) (swn_bgcolor c) [AlignCenter] [n]
+  paintAndWrite w f (fi width) (fi hight) 0 (swn_bgcolor c) "" (swn_color c) (swn_bgcolor c) [AlignCenter] [replaceWorkspaceN n]
   releaseXMF f
   i <- startTimer (swn_fade c)
   return (wrs, Just $ SWN False c $ Just (i,w))
